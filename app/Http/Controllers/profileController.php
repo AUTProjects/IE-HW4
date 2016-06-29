@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 
 class profileController extends Controller
@@ -28,12 +29,22 @@ class profileController extends Controller
     }
 
     public function changeProfile(Request $request){
+
         $first_name = $request->input("firstname");
         $last_name = $request->input("lastname");
         $email = $request->input("email");
         $password = $request->input("password");
 
         $user = Auth::User();
+
+        if(Input::hasfile('image')){
+            $image = Input::file('image');
+            $upload = base_path().'\\public\\photo';
+            $filename = rand(1111111,9999999).'.jpg';
+            $image->move($upload, $filename);
+            $user->image = $filename;
+        }
+
 
         if($first_name!=null)
             $user->name = $first_name;

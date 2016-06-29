@@ -11,7 +11,7 @@
 <div id="data">
 
 </div>
-<form id="registeration" action="/profile" method="POST" style="margin-left: auto;margin-right: auto;">
+<form id="registeration" action="/profile" method="POST" style="margin-left: auto;margin-right: auto;"  enctype="multipart/form-data">
     {{ csrf_field() }}
     <div style="width: 70%;height: 300px;margin-left: auto;margin-right: auto;">
         <div class="titles">
