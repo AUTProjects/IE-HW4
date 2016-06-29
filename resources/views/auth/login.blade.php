@@ -7,7 +7,7 @@
 <body>
 <div id="container">
     <div class="forms">
-        <form id="registeration" method="POST" action="/register" >
+        <form id="registeration" method="POST" action="/register" enctype="multipart/form-data" >
             {{ csrf_field() }}
             <div class="titles">
                 <h5>First Name :</h5>

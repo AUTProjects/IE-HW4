@@ -21,8 +21,8 @@ class profileController extends Controller
         $user = Auth::User();
         if(!$ajax)
             return view('profile');
-
-        $xml = "<data><first>$user->name</first><last>$user->last_name</last><username>$user->email</username></data>";
+        $url =url('/').'/photo/'.$user->image;
+        $xml = "<data><first>$user->name</first><last>$user->last_name</last><image>$url </image><username>$user->email</username></data>";
         return $xml;
 
     }

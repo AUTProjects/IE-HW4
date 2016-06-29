@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -64,10 +65,18 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
+        if(Input::hasfile('image')){
+            $image = Input::file('image');
+            $upload = base_path().'\\public\\photo';
+            $filename = rand(1111111,9999999).'.jpg';
+            $image->move($upload, $filename);
+        }
+
+
         return User::create([
             'name' => $data['name'],
             'last_name' => $data['lastname'],
-            'image'=>$data['image'],
+            'image'=>$filename,
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
