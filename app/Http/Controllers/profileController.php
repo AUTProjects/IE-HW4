@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class profileController extends Controller
 {
@@ -23,7 +24,23 @@ class profileController extends Controller
         if(!$ajax)
             return view('profile');
         $url =url('/').'/photo/'.$user->image;
-        $xml = "<data><first>$user->name</first><last>$user->last_name</last><image>$url </image><username>$user->email</username></data>";
+        $contacts = explode(";", $user->contacts);
+        $xml = "<data><first>$user->name</first><last>$user->last_name</last><image>$url
+                </image><username>$user->email</username>";
+        $xml .= '<contacts>';
+            foreach($contacts as $contact)
+            {
+                $xml = $xml."<contact>";
+                $profiles = DB::table('users')->where("id",$contact)->get();
+                $profile = $profiles[0];
+                $profileurl =url('/').'/photo/'.$profile->image;
+                $xml .="<first>$profile->name</first><last>$profile->last_name</last><image>$profileurl</image><username>$profile->email</username>";
+                $xml = $xml."</contact>";
+            }
+        $xml .= '</contacts>';
+
+        $xml = $xml.'</data>';
+
         return $xml;
 
     }
