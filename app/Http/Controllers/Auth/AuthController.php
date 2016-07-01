@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
@@ -49,12 +51,27 @@ class AuthController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+//        $code = $data['CaptchaCode'];
+//
+//
+//        if( !captcha_validate($code))
+//            return Validator::make($data,[
+//                    'temp' => 'required'
+//                ]);
+
+
+        $validator = Validator::make($data, [
            'name' => 'required|max:255',
             'lastname' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6'
+        //    ,'CaptchaCode' => 'required'
         ]);
+//        if ($validator->fails()) {
+//            return Redirect::to('/login')
+//                ->withErrors($validator);
+//        }else
+            return $validator;
     }
 
     /**
@@ -70,14 +87,16 @@ class AuthController extends Controller
             $upload = base_path().'\\public\\photo';
             $filename = rand(1111111,9999999).'.jpg';
             $image->move($upload, $filename);
-        }
+        }else
+            $filename = "de.jpg";
 
-
+        $now = Carbon::now();
         return User::create([
             'name' => $data['name'],
             'last_name' => $data['lastname'],
             'image'=>$filename,
             'email' => $data['email'],
+            'online' => $now,
             'password' => bcrypt($data['password']),
         ]);
     }

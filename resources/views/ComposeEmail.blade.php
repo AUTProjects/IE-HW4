@@ -2,12 +2,12 @@
 <html>
 <head>
     <title>IE Project 4</title>
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('Stylesheets/ComposeEmail.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('Stylesheets/ComposeEmail.css')}}" >
 </head>
 <body>
 <div id="container">
     <div class="forms">
-        <form id="send" action="/send" method="post">
+        <form id="send" action="/send" method="POST"  enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="titles">
                 <h5>To:</h5>
@@ -18,7 +18,7 @@
             </div>
 
             <div class="inputs">
-                <input type="text" name="to">
+                <input type="text" id="to" name="to">
                 <input type="text" name="subject">
                 <textarea rows="10" cols="70" name="text"></textarea>
                 <input type="file" name="attachment">
@@ -30,6 +30,7 @@
 </html>
 <script>
     document.getElementById("submit").onclick = function(){
+
         window.location.replace("/");
     };
 </script>

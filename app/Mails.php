@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mails extends Model
 {
-    //
+    protected $fillable = [
+        'to','from', 'read',
+    ];
+
 }

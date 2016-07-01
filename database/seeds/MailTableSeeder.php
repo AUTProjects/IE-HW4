@@ -19,7 +19,10 @@ class MailTableSeeder extends Seeder
             'text' => str_random(100),
             'title' => str_random(20),
             'created_at' => date("Y-m-d H:i:s",$int),
+            'attachment' => '0',
+            'read' =>  0,
             'type'=>'send'
+
         ]);
         }
 
@@ -31,6 +34,8 @@ class MailTableSeeder extends Seeder
                 'to' => str_random(10).'@gmail.com',
                 'text' => str_random(100),
                 'title' => str_random(20),
+                'attachment' => '0',
+                'read' =>  0,
                 'created_at' => date("Y-m-d H:i:s",$int),
                 'type'=>'receive'
             ]);

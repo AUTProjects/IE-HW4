@@ -11,6 +11,9 @@
     <p>with subject of:</p><p id="subject">{{$mail->title}}</p><br>
     <p>received in date:</p><p id="date">{{$mail->created_at}}</p><br>
     <div id="test"><p id="text">{{$mail->text}}</p></div>
+    @if($mail->attachment != 0)
+        <button type="button" id="Attchment" name="{{$mail->attachment}}"> Get Attachment</button>
+    @endif
     <button type="button" id="deleteMail">Delete this Email</button>
 
 </div>
@@ -21,6 +24,8 @@
 
     <script type="text/javascript">
                     $(document).on('click','#deleteMail',function(){
+
+
                         $.ajax({
                             method: 'get',
                             url: '/server?delete=true&from='+$('#from').text()+'&date='+$('#date').text(),
@@ -37,6 +42,15 @@
                             });
 
                     });
+                    $(document).on('click','#Attchment',function(){
+
+
+//                        window.alert("/attachment/"+$('#Attchment').attr("name"));
+
+                        window.location.replace("/attachment/"+$('#Attchment').attr("name"));
+                    });
+
 
     </script>
+
 

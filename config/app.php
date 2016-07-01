@@ -122,6 +122,8 @@ return [
     */
 
     'providers' => [
+        LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
+
 
         /*
          * Laravel Framework Service Providers...

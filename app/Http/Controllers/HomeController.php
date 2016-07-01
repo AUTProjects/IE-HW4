@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+
 
 class HomeController extends Controller
 {
@@ -26,7 +26,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = Auth::User();
+        $user->online = $now = Carbon::now();
+        $user->save();
         return view('home')->with('user',$user);
     }
 }

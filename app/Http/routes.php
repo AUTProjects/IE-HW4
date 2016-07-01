@@ -19,8 +19,14 @@ Route::get('/', 'HomeController@index');
 
 Route::get('/server','AjaxController@inboxAjax');
 
-Route::get('/send','SendMailControler@sendMail');
+Route::post('/send','SendMailControler@sendMail');
 
 Route::get('/profile','ProfileController@getProfile');
 
 Route::post('/profile','ProfileController@changeProfile');
+
+Route::get('/users','UserController@getUsers');
+
+Route::get('/add','UserController@addUser');
+
+Route::get('/block','UserController@blockUser');

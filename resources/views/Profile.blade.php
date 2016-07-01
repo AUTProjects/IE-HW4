@@ -49,7 +49,7 @@
                 success: function (xml) {
                     var data = $(xml).children('data');
                     var contacts = data.children('contacts');
-                    var it = '<img src="' +""+ data.children('image').text() + '"><br><span>First Name: </span><sapn >' + data.children('first').text() + '</span><br><span>Last Name: </span><span>' + data.children('last').text() + '</span><br><span>Email: </span><span>' + data.children('username').text() + '</span>';
+                    var it = '<img src="' +""+ data.children('image').text() + '"><br><span>First Name: </span><sapn >' + data.children('first').text() + '</span><br><span>Last Name: </span><span>' + data.children('last').text() + '</span><br><span>Email: </span><span>' + data.children('username').text() + '</span><br><span>Last Online: </span><span>' + data.children('online').text() + '</span>';
                     $("#data").append(it);
                     contacts.children('contact').each(function () {
                         var person = '<div class="person"><img src="' + $(this).children('image').text() + '"><br><span>First Name: </span><span >' + $(this).children('first').text() + '</span><br><span>Last Name: </span><span>' + $(this).children('last').text() + '</span><br><span>Email: </span><span>' + $(this).children('username').text() + '</span><br></div>';

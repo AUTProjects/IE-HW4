@@ -40,22 +40,25 @@
             cache : false ,
             async : false ,
             success : function (xml) {
+                last = $(xml).children('mails').children("update").text();
                 var all=$(xml).children('mails').children("mail");
                 all.each(function(){
                     var text = $(this).children("text").text();
-                    var email='<div class="eachMail">'+'<div class="from">'+$(this).children("from").text();
+
+                    if($(this).attr("read")!==undefined){//the email has been read
+                        var email='<div class="eachMail" >'+'<div style="background-color:green" class="from">'+$(this).children("from").text();
+                    }else if($(this).attr("spam")!==undefined){
+                        var email='<div class="eachMail" >'+'<div style="background-color:yellow" class="from">'+$(this).children("from").text();
+                    }else{
+                        var email='<div class="eachMail" >'+'<div style="background-color:white" class="from">'+$(this).children("from").text();
+                    }
+
+
                     email+='</div><div class="subject">'+$(this).children("subject").text();
                     email+='</div><div class="text">'+text.substring(0,10);
                     email+='</div><div class="date">'+$(this).children("date").text()+'</div></div>';
                     $("#mails").append(email);
-                    if($(this).attr("read")!==undefined){//the email has been read
-                        $("mails").children(":last").css('background-color','green');
-                    }else if($(this).attr("spam")!==undefined){
-                        $("mails").children(":last").css('background-color','yellow');
-                    }else{
-                        $("mails").children(":last").css('background-color','white');
-                    }
-                    last = $(this).children("id").text();
+
                 });
                 $(document).on('click','.eachMail',function(){
                     window.location="../server?email=true & from="+$(this).children(".from").text()+"& date="+$(this).children(".date").text();
@@ -70,6 +73,7 @@
         });
 
         $(document).on('click','#refresh',function(){
+            window.alert(last);
             numOfMail=$("#numOfMail").val();
             $.ajax({
                 type:"GET",
@@ -78,22 +82,27 @@
                 cache : false ,
                 async : false ,
                 success : function (xml) {
+                    var xmlText = new XMLSerializer().serializeToString(xml);
+                    window.alert(xmlText);
                     var all=$(xml).children('mails').children("mail");
+                    last = $(xml).children('mails').children("update").text();
                     all.each(function(){
                         var text = $(this).children("text").text();
-                        var email='<div class="eachMail">'+'<div class="from">'+$(this).children("from").text();
+
+                        if($(this).attr("read")!==undefined){//the email has been read
+                            var email='<div class="eachMail" >'+'<div style="background-color:green" class="from">'+$(this).children("from").text();
+                        }else if($(this).attr("spam")!==undefined){
+                            var email='<div class="eachMail" >'+'<div style="background-color:yellow" class="from">'+$(this).children("from").text();
+                        }else{
+                            var email='<div class="eachMail" >'+'<div style="background-color:white" class="from">'+$(this).children("from").text();
+                        }
+
+
                         email+='</div><div class="subject">'+$(this).children("subject").text();
                         email+='</div><div class="text">'+text.substring(0,10);
                         email+='</div><div class="date">'+$(this).children("date").text()+'</div></div>';
-                        $("#mails").insertChildBefore($(this).children(":first"),email);
-                        if($(this).attr("read")!==undefined){//the email has been read
-                            $("mails").children(":last").css('background-color','green');
-                        }else if($(this).attr("spam")!==undefined){
-                            $("mails").children(":last").css('background-color','yellow');
-                        }else{
-                            $("mails").children(":last").css('background-color','white');
-                        }
-                        last = $(this).children("id").text();
+                        $("#mails").prepend(email);
+
                     });
                     $(document).on('click','.eachMail',function(){
                         window.location="../server?email=true & from="+$(this).children(".from").text()+"& date="+$(this).children(".date").text();
@@ -124,22 +133,24 @@
                 async : false ,
                 success : function (xml) {
                     var all=$(xml).children('mails').children("mail");
-
+                    last = $(xml).children('mails').children("update").text();
                     all.each(function(){
                         var text = $(this).children("text").text();
-                        var email='<div class="eachMail">'+'<div class="from">'+$(this).children("from").text();
+
+                        if($(this).attr("read")!==undefined){//the email has been read
+                            var email='<div class="eachMail" >'+'<div style="background-color:green" class="from">'+$(this).children("from").text();
+                        }else if($(this).attr("spam")!==undefined){
+                            var email='<div class="eachMail" >'+'<div style="background-color:yellow" class="from">'+$(this).children("from").text();
+                        }else{
+                            var email='<div class="eachMail" >'+'<div style="background-color:white" class="from">'+$(this).children("from").text();
+                        }
+
+
                         email+='</div><div class="subject">'+$(this).children("subject").text();
                         email+='</div><div class="text">'+text.substring(0,10);
                         email+='</div><div class="date">'+$(this).children("date").text()+'</div></div>';
                         $("#mails").append(email);
-                        if($(this).attr("read")!==undefined){//the email has been read
-                            $("mails").children(":last").css('background-color','green');
-                        }else if($(this).attr("spam")!==undefined){
-                            $("mails").children(":last").css('background-color','yellow');
-                        }else{
-                            $("mails").children(":last").css('background-color','white');
-                        }
-                        last = $(this).children("id").text();
+
                     });
                     $(document).on('click','.eachMail',function(){
                         window.location="../server?email=true & from="+$(this).children(".from").text()+"& date="+$(this).children(".date").text();
@@ -166,18 +177,21 @@
                 success : function (xml) {
                     var all=$(xml).children('mails').children("mail");
                     all.each(function(){
-                        var email='<div class="eachMail">'+'<div class="from">'+$(this).children("to").text();
+                        var text = $(this).children("text").text();
+
+                        if($(this).attr("read")!==undefined){//the email has been read
+                            var email='<div class="eachMail" >'+'<div style="background-color:green" class="from">'+$(this).children("from").text();
+                        }else if($(this).attr("spam")!==undefined){
+                            var email='<div class="eachMail" >'+'<div style="background-color:yellow" class="from">'+$(this).children("from").text();
+                        }else{
+                            var email='<div class="eachMail" >'+'<div style="background-color:white" class="from">'+$(this).children("from").text();
+                        }
+
+
                         email+='</div><div class="subject">'+$(this).children("subject").text();
-                        email+='</div><div class="text">'+$(this).children("text").text().substring(0,10)+'...';
+                        email+='</div><div class="text">'+text.substring(0,10);
                         email+='</div><div class="date">'+$(this).children("date").text()+'</div></div>';
                         $("#mails").append(email);
-                        if($(this).attr("read")!==undefined){//the email has been read
-                            $("mails").children(":last").css('background-color','green');
-                        }else if($(this).attr("spam")!==undefined){
-                            $("mails").children(":last").css('background-color','yellow');
-                        }else{
-                            $("mails").children(":last").css('background-color','white');
-                        }
                     });
                     $(document).on('click','.eachMail',function(){
                         window.location="/server?email=true&from="+$(this).children(".from").text()+"&date="+$(this).children(".date").text();
@@ -203,24 +217,26 @@
                 cache : false ,
                 async : false ,
                 success : function (xml) {
+                    last = $(xml).children('mails').children("update").text();
                     var all=$(xml).children('mails').children("mail");
 
                     all.each(function(){
-                           var text = $(this).children("text").text();
-                        var email='<div class="eachMail">'+'<div class="from">'+$(this).children("from").text();
+                        var text = $(this).children("text").text();
+
+                        if($(this).attr("read")!==undefined){//the email has been read
+                            var email='<div class="eachMail" >'+'<div style="background-color:green" class="from">'+$(this).children("from").text();
+                        }else if($(this).attr("spam")!==undefined){
+                            var email='<div class="eachMail" >'+'<div style="background-color:yellow" class="from">'+$(this).children("from").text();
+                        }else{
+                            var email='<div class="eachMail" >'+'<div style="background-color:white" class="from">'+$(this).children("from").text();
+                        }
+
+
                         email+='</div><div class="subject">'+$(this).children("subject").text();
                         email+='</div><div class="text">'+text.substring(0,10);
                         email+='</div><div class="date">'+$(this).children("date").text()+'</div></div>';
                         $("#mails").append(email);
-                        if($(this).attr("read")!==undefined){//the email has been read
-                            $("mails").children(":last").css('background-color','green');
-                        }else if($(this).attr("spam")!==undefined){
-                            $("mails").children(":last").css('background-color','yellow');
-                        }else{
-                            $("mails").children(":last").css('background-color','white');
-                        }
-                        if(last < $(this).children("id").text())
-                            last = $(this).children("id").text();
+
                     });
                     $(document).on('click','.eachMail',function(){
                         window.location="/server?email=true&from="+$(this).children(".from").text()+"&date="+$(this).children(".date").text();

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mails;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -44,36 +46,41 @@ class AjaxController extends Controller
                 $from = $request->input('from');
                 $date = $request->input('date');
                 $mail = DB::table('mails')->where('from',$from)->where('created_at',$date)->get();
-                if(count($mail) == 0)
-                    $mail = DB::table('mails')->where('to',$from)->where('created_at',$date)->get();
+                DB::table('mails')->where('id', $mail[0]->id)->update(array('read' => 1));
                 return view('ReadEmail')->with('mail',$mail[0]);
             }
 
-
+ir
             if($sent)
                 if($sort == 'sender')
-                    $mails = DB::table('mails')->where('type','receive') ->orderBy('from', 'desc')->get();
+                    $mails = DB::table('mails')->where('type','send') ->orderBy('from', 'desc')->get();
                 elseif($sort == 'attach')
-                    $mails = DB::table('mails')->where('type','receive') ->orderBy('from', 'desc')->get();//TODO
+                    $mails = DB::table('mails')->where('type','send')->where('attachment','!=','0') ->get();//TODO
                 else
-                    $mails = DB::table('mails')->where('type','receive') ->orderBy('created_at', 'desc')->get();
+                    $mails = DB::table('mails')->where('type','send') ->orderBy('created_at', 'desc')->get();
             elseif($refresh)
-                    $mails = DB::table('mails')->where('type','receive')->where('id','<',$last)->get();
+                    $mails = DB::table('mails')->where('type','receive')->where('created_at','>',$last)->get();
             elseif($inbox ) //TODO
                 if($sort == 'sender')
                     $mails = DB::table('mails')->where('type','receive') ->orderBy('from', 'desc')->get();
                 elseif($sort == 'attach')
-                    $mails = DB::table('mails')->where('type','receive') ->orderBy('from', 'desc')->get();//TODO
+                    $mails = DB::table('mails')->where('type','receive')->where('attachment','!=','0')->get();//TODO
                 else
                     $mails = DB::table('mails')->where('type','receive') ->orderBy('created_at', 'desc')->get();
 
 
             $xml = '<mails>';
+            $now = Carbon::now();
+            $xml .= "<update>$now</update>";
                 for($x =0; $x < count($mails);$x++){
                     $mail = $mails[$x];
                     if($x == $number && $number != 0)
+                        if(!$refresh)
                         break;
-                    $xml = $xml.'<mail>';
+                    if($mail->read == "0")
+                        $xml = $xml.'<mail read="yes">';
+                    else
+                        $xml = $xml.'<mail>';
                     $xml = $xml.'<from>';
                     $xml = $xml.$mail->from;
                     $xml = $xml.'</from>';

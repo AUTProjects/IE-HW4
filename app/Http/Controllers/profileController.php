@@ -23,19 +23,30 @@ class profileController extends Controller
         $user = Auth::User();
         if(!$ajax)
             return view('profile');
-        $url =url('/').'/photo/'.$user->image;
+
+        if($user->image != null)
+            $url =url('/').'/photo/'.$user->image;
+        else
+            $url = "";
+
         $contacts = explode(";", $user->contacts);
-        $xml = "<data><first>$user->name</first><last>$user->last_name</last><image>$url
+
+        $xml = "<data><online>$user->online</online><first>$user->name</first><last>$user->last_name</last><image>$url
                 </image><username>$user->email</username>";
         $xml .= '<contacts>';
-            foreach($contacts as $contact)
-            {
-                $xml = $xml."<contact>";
-                $profiles = DB::table('users')->where("id",$contact)->get();
-                $profile = $profiles[0];
-                $profileurl =url('/').'/photo/'.$profile->image;
-                $xml .="<first>$profile->name</first><last>$profile->last_name</last><image>$profileurl</image><username>$profile->email</username>";
-                $xml = $xml."</contact>";
+            foreach($contacts as $contact) {
+                if ($contact != null) {
+                    $profiles = DB::table('users')->where("id", $contact)->get();
+                    if(@$profiles != null) {
+                        $xml = $xml . "<contact>";
+                        $profile = $profiles[0];
+                        $profileurl = url('/') . '/photo/' . $profile->image;
+                        $xml .= "<online>";
+                        $xml.="$profile->last_name";
+                        $xml .= "</online><first>$profile->name</first><last>$profile->last_name</last><image>$profileurl</image><username>$profile->email</username>";
+                        $xml = $xml . "</contact>";
+                    }
+                }
             }
         $xml .= '</contacts>';
 
@@ -60,6 +71,7 @@ class profileController extends Controller
             $filename = rand(1111111,9999999).'.jpg';
             $image->move($upload, $filename);
             $user->image = $filename;
+            $user->online = date_create();
         }
 
 
