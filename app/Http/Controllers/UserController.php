@@ -7,11 +7,17 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\View;
-use Monolog\Handler\SyslogUdp\UdpSocket;
+use Illuminate\Support\Facades\DB;
+
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function getUsers(){
         $users = User::All();
         $contacts = explode(";",Auth::User()->contacts);
@@ -29,6 +35,12 @@ class UserController extends Controller
         $user =Auth::User();
         $user->contacts = $request->input('id').';'.$user->contacts;
         $user->save();
+
+        $user2 = User::where('id',$request->input('id'))->get();
+        if(count($user)) {
+            $user2[0]->notif .= $user->name . " " . $user->last_name;
+            $user2[0]->save();
+        }
         return redirect()->back();
     }
 

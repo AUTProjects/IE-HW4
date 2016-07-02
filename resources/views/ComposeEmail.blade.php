@@ -18,8 +18,11 @@
             </div>
 
             <div class="inputs">
-                <input type="text" id="to" name="to">
-                <input type="text" name="subject">
+                <input type="text" id="to" name="to" value="{{ old('to') }}">
+                @if($error == 1)
+                <div>just send message to your contacts</div>
+                @endif
+                <input type="text" name="subject" value="{{ old('subject') }}">
                 <textarea rows="10" cols="70" name="text"></textarea>
                 <input type="file" name="attachment">
             </div>

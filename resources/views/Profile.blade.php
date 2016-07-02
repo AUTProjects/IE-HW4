@@ -20,14 +20,24 @@
             <h5>Email :</h5>
             <h5>Password :</h5>
             <h5>Image :</h5>
+            <h5>background :</h5>
         </div>
         <div class="inputs">
 
-            <input type="text" name="firstname">
-            <input type="text" name="lastname">
-            <input type="email" name="email">
-            <input type="password" name="pass">
+            <label>
+                <input type="text" name="firstname">
+            </label>
+            <label>
+                <input type="text" name="lastname">
+            </label>
+            <label>
+                <input type="email" name="email">
+            </label>
+            <label>
+                <input type="password" name="pass">
+            </label>
             <input type="file" name="image">
+            <input type="file" name="background">
         </div>
         <input type="submit" value="Save Changes" style="background-color: #97d9ff">
     </div>

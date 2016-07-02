@@ -22,6 +22,7 @@ class CreateEmailTable extends Migration
             $table->string('attachment');
             $table->date('online');
             $table->boolean('read');
+            $table->string('label');
             $table->timestamps();
         });
     }

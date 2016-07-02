@@ -75,6 +75,15 @@ class profileController extends Controller
         }
 
 
+        if(Input::hasfile('background')){
+            $image = Input::file('background');
+            $upload = base_path().'\\public';
+            $filename = rand(1111111,9999999).'.jpg';
+            $image->move($upload, $filename);
+            $user->background = $filename;
+            $user->online = date_create();
+        }
+
         if($first_name!=null)
             $user->name = $first_name;
 

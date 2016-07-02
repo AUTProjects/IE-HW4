@@ -5,12 +5,17 @@
     <title>IE Project 4</title>
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('Stylesheets/Inbox.css') }}">
 </head>
-<body>
+<body style="background-image:url({{$user->background}});">
 
 <div id="header">
     <h1>Inbox</h1>
     <a style="color: red" href="/profile">{{$user->name.':'.$user->email}}</a>
     <a style="color: red" href="/logout">LOG OUT!!</a>
+    @if($user->notif != "")
+    <div>{{$user->notif}} added you :))))</div>
+    <div style="display: none;" >{!!$user->notif = ""!!}
+    {!!$user->save()!!}</div>
+    @endif
 </div>
 
 <div id="box">

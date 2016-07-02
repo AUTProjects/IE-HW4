@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AjaxController extends Controller
 {
@@ -30,8 +29,12 @@ class AjaxController extends Controller
             $compose = $request->input('compose');
             $last = $request->input('last');
 
+            $user = Auth::User();
+
+
+
             if($compose){
-                return view('ComposeEmail');
+                return view('ComposeEmail')->with('error',0);
             }
 
             if($delete){
@@ -50,37 +53,50 @@ class AjaxController extends Controller
                 return view('ReadEmail')->with('mail',$mail[0]);
             }
 
-ir
+
             if($sent)
                 if($sort == 'sender')
-                    $mails = DB::table('mails')->where('type','send') ->orderBy('from', 'desc')->get();
+                    $mails = DB::table('mails')->where('from',$user->email) ->orderBy('from', 'desc')->get();
                 elseif($sort == 'attach')
-                    $mails = DB::table('mails')->where('type','send')->where('attachment','!=','0') ->get();//TODO
+                    $mails = DB::table('mails')->where('from',$user->email)->where('attachment','!=','0') ->get();//TODO
                 else
-                    $mails = DB::table('mails')->where('type','send') ->orderBy('created_at', 'desc')->get();
+                    $mails = DB::table('mails')->where('from',$user->email) ->orderBy('created_at', 'desc')->get();
             elseif($refresh)
-                    $mails = DB::table('mails')->where('type','receive')->where('created_at','>',$last)->get();
+                    $mails = DB::table('mails')->where('to',$user->email)->where('created_at','>',$last)->get();
             elseif($inbox ) //TODO
                 if($sort == 'sender')
-                    $mails = DB::table('mails')->where('type','receive') ->orderBy('from', 'desc')->get();
+                    $mails = DB::table('mails')->where('to',$user->email) ->orderBy('from', 'desc')->get();
                 elseif($sort == 'attach')
-                    $mails = DB::table('mails')->where('type','receive')->where('attachment','!=','0')->get();//TODO
+                    $mails = DB::table('mails')->where('to',$user->email)->where('attachment','!=','0')->get();//TODO
                 else
-                    $mails = DB::table('mails')->where('type','receive') ->orderBy('created_at', 'desc')->get();
+                    $mails = DB::table('mails')->where('to',$user->email) ->orderBy('created_at', 'desc')->get();
 
+                $contacts = array();
+                foreach(explode(";",$user->contacts) as $contact ){
+                    $query = DB::table('users')->where('id',$contact)->get();
+                    if(count($query) > 0) {
+                        array_push($contacts,$query[0]->email);
+                    }
+                  }
 
             $xml = '<mails>';
             $now = Carbon::now();
             $xml .= "<update>$now</update>";
                 for($x =0; $x < count($mails);$x++){
+
                     $mail = $mails[$x];
                     if($x == $number && $number != 0)
                         if(!$refresh)
                         break;
-                    if($mail->read == "0")
-                        $xml = $xml.'<mail read="yes">';
+                    if(!in_array($mail->from,$contacts))
+                        $xml .= '<mail spam="yes">';
+                    elseif($mail->read == "0")
+                        $xml .= '<mail read="yes">';
                     else
-                        $xml = $xml.'<mail>';
+                        $xml .= '<mail>';
+
+
+
                     $xml = $xml.'<from>';
                     $xml = $xml.$mail->from;
                     $xml = $xml.'</from>';
